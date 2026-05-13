@@ -73,7 +73,9 @@ sequelize.authenticate()
     return sequelize.sync({ alter: true });
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`🚀  Project Manager Application running on http://localhost:${PORT}`));
+    app.listen(PORT, '0.0.0.0', () => 
+  console.log(`🚀  Project Manager Application running on http://localhost:${PORT}`)
+);
   })
   .catch(err => {
     console.error('❌  Database connection failed:', err.message);
