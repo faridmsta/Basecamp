@@ -1,0 +1,64 @@
+<!-- views/users/new.ejs — Registration Page -->
+
+<!-- Heading -->
+<h1 class="auth-heading">Create your account</h1>
+<p class="auth-subheading">Start managing your projects in minutes. It's free.</p>
+
+<!-- Validation Errors -->
+<% if (errors && errors.length > 0) { %>
+  <div class="auth-errors">
+    <ul>
+      <% errors.forEach(err => { %>
+        <li>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <%= err.message %>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<!-- Form -->
+<form action="/users" method="POST" novalidate style="display:flex;flex-direction:column;gap:14px;">
+
+  <!-- Username -->
+  <div>
+    <label for="username" class="auth-label">Username</label>
+    <input id="username" name="username" type="text" required autocomplete="username"
+      class="auth-input" placeholder="e.g. johndoe" />
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label for="email" class="auth-label">Email address</label>
+    <input id="email" name="email" type="email" required autocomplete="email"
+      class="auth-input" placeholder="you@example.com" />
+  </div>
+
+  <!-- Password -->
+  <div>
+    <label for="password" class="auth-label">Password</label>
+    <input id="password" name="password" type="password" required autocomplete="new-password"
+      class="auth-input" placeholder="Min. 6 characters" />
+  </div>
+
+  <!-- Confirm Password -->
+  <div>
+    <label for="password_confirmation" class="auth-label">Confirm Password</label>
+    <input id="password_confirmation" name="password_confirmation" type="password" required
+      autocomplete="new-password" class="auth-input" placeholder="Repeat your password" />
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" id="create-account-btn" class="auth-submit" style="margin-top:4px;">
+    Create account now
+  </button>
+
+</form>
+
+<!-- Login link -->
+<p class="auth-bottom-link" style="margin-top:20px;">
+  Already have an account? <a href="/sessions/sign_in" id="go-login-link">Login now.</a>
+</p>

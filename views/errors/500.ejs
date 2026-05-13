@@ -1,0 +1,27 @@
+<!-- views/errors/500.ejs — 500 Server Error -->
+<div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-fade-in">
+  <div class="text-red-500 mb-6">
+    <svg class="w-24 h-24 mx-auto opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+  </div>
+  <h1 class="text-6xl font-extrabold text-black mb-4 tracking-tight">500</h1>
+  <p class="text-2xl font-medium text-slate-300 mb-2">Internal Server Error</p>
+  <p class="text-slate-500 max-w-md mx-auto mb-6">Oops, something went wrong on our end. We're looking into it.</p>
+
+  <% if (message) { %>
+    <div class="bg-slate-900/80 border border-red-500/30 rounded-xl p-4 max-w-2xl mx-auto mb-8 overflow-auto text-left">
+      <code class="text-red-400 text-sm font-mono"><%= message %></code>
+    </div>
+    <% } %>
+
+      <a href="/"
+        class="btn-primary px-8 py-3 rounded-xl text-black font-semibold shadow-lg inline-flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Return Home
+      </a>
+</div>

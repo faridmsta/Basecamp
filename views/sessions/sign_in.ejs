@@ -1,0 +1,60 @@
+<!-- views/sessions/sign_in.ejs — Login Page -->
+
+<!-- Heading -->
+<h1 class="auth-heading">Login to your account</h1>
+<p class="auth-subheading">Continue tracking your progress after logging in to your account.</p>
+
+<!-- Validation Errors -->
+<% if (errors && errors.length > 0) { %>
+  <div class="auth-errors">
+    <ul>
+      <% errors.forEach(err => { %>
+        <li>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <%= err.message %>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<!-- Form -->
+<form action="/sessions/sign_in" method="POST" novalidate style="display:flex;flex-direction:column;gap:16px;">
+
+  <!-- Email -->
+  <div>
+    <label for="email" class="auth-label">Email address</label>
+    <input id="email" name="email" type="email" required autocomplete="email"
+      class="auth-input" placeholder="you@example.com" />
+  </div>
+
+  <!-- Password -->
+  <div>
+    <label for="password" class="auth-label">Password</label>
+    <input id="password" name="password" type="password" required autocomplete="current-password"
+      class="auth-input" placeholder="Your password" />
+  </div>
+
+  <!-- Remember + Forgot -->
+  <div class="auth-remember-row">
+    <label>
+      <input type="checkbox" name="remember" id="remember-me"
+        style="width:14px;height:14px;accent-color:#4F46E5;border-radius:3px;" />
+      Remember me
+    </label>
+    <a href="#">Forgot password?</a>
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" id="sign-in-btn" class="auth-submit" style="margin-top:4px;">
+    Login now
+  </button>
+
+</form>
+
+<!-- Register link -->
+<p class="auth-bottom-link" style="margin-top:20px;">
+  Don't have an account? <a href="/users/new" id="go-register-link">Create one now.</a>
+</p>

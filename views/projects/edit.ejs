@@ -1,0 +1,99 @@
+<!-- views/projects/edit.ejs — Edit Project Form -->
+<div class="max-w-2xl mx-auto py-4">
+
+  <!-- Back Link -->
+  <a href="/projects/<%= project.id %>"
+    class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-black transition-colors mb-8">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+    Back to Project
+  </a>
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-semibold text-slate-900">Edit Project</h1>
+    <p class="text-slate-500 mt-2">Update the details for <span class="text-slate-900 font-medium">"<%= project.name %>"</span></p>
+  </div>
+
+  <!-- Card -->
+  <div class="card p-8">
+
+    <!-- Validation Errors -->
+    <% if (errors && errors.length> 0) { %>
+      <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+        <ul class="space-y-1">
+          <% errors.forEach(err=> { %>
+            <li class="flex items-center gap-2 text-sm text-red-300">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              <%= err.message %>
+            </li>
+            <% }) %>
+        </ul>
+      </div>
+      <% } %>
+
+        <!-- PUT via method override -->
+        <form action="/projects/<%= project.id %>?_method=PUT" method="POST" class="space-y-6" novalidate>
+
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">
+              Project Name <span class="text-red-500">*</span>
+            </label>
+            <input id="name" name="name" type="text" required value="<%= project.name %>"
+              class="input-field w-full px-4 py-3 rounded-xl text-sm" />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label for="description" class="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+            <textarea id="description" name="description" rows="5" placeholder="Describe what this project is about..."
+              class="input-field w-full px-4 py-3 rounded-xl text-sm resize-none"><%= project.description || '' %></textarea>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <label for="status" class="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
+            <select id="status" name="status"
+              class="input-field w-full px-4 py-3 rounded-xl text-sm appearance-none cursor-pointer">
+              <option value="active" <%=project.status==='active' ? 'selected' : '' %>>🟢 Active</option>
+              <option value="archived" <%=project.status==='archived' ? 'selected' : '' %>>⚪ Archived</option>
+              <option value="completed" <%=project.status==='completed' ? 'selected' : '' %>>🟣 Completed</option>
+            </select>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-3 pt-4">
+            <button type="submit" class="btn-primary flex-1 py-2.5 rounded-md text-white font-medium text-sm">
+              Save Changes →
+            </button>
+            <a href="/projects/<%= project.id %>" class="px-5 py-2.5 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50
+                  bg-white border border-slate-300 transition-colors">
+              Cancel
+            </a>
+          </div>
+
+        </form>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="mt-8 card border-red-200 p-6 bg-red-50/30">
+    <h3 class="text-sm font-medium text-red-600 uppercase tracking-wider mb-3">Danger Zone</h3>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-slate-900 font-medium text-sm">Delete this project</p>
+        <p class="text-slate-500 text-xs mt-1">This action is permanent and cannot be undone.</p>
+      </div>
+      <form action="/projects/<%= project.id %>?_method=DELETE" method="POST"
+        onsubmit="return confirm('Delete this project permanently?')">
+        <button type="submit" class="btn-danger px-4 py-2 rounded-md text-sm font-medium">
+          Delete
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>

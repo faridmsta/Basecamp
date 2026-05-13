@@ -1,0 +1,282 @@
+<!-- views/projects/show.ejs — Single Project View -->
+
+<!-- Back Link -->
+<a href="/projects"
+  class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-black transition-colors mb-8">
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  Back to Projects
+</a>
+
+<!-- Hero Banner -->
+<div class="card p-10 mb-8">
+  <div class="relative">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+      <div>
+        <!-- Status Badge -->
+        <span
+          class="status-<%= project.status %> text-xs font-medium px-3 py-1.5 rounded-md capitalize inline-flex items-center gap-1.5 mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+          <%= project.status %>
+        </span>
+        <h1 class="text-3xl font-semibold text-slate-900 mb-3">
+          <%= project.name %>
+        </h1>
+        <p class="text-slate-600 text-lg max-w-xl">
+          <%= project.description || 'No description provided for this project.' %>
+        </p>
+      </div>
+
+      <!-- Action Buttons (owner or admin only) -->
+      <% if (isProjectAdmin) { %>
+        <div class="flex flex-col gap-3 flex-shrink-0">
+          <a href="/projects/<%= project.id %>/edit" id="edit-project-btn" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium
+                  bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 transition-colors shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Edit Project
+          </a>
+
+          <form action="/projects/<%= project.id %>?_method=DELETE" method="POST"
+            onsubmit="return confirm('Are you sure you want to delete this project? This cannot be undone.')">
+            <button type="submit" id="delete-project-btn" class="btn-danger w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md
+                   text-sm font-medium shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Delete
+            </button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Meta Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+
+  <div class="card p-6">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">Owner</p>
+    <% if (project.owner) { %>
+      <a href="/users/<%= project.owner.id %>"
+        class="flex items-center gap-2 text-slate-900 font-medium hover:text-slate-600 transition-colors">
+        <div
+          class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-medium text-slate-700">
+          <%= project.owner.username.charAt(0).toUpperCase() %>
+        </div>
+        <%= project.owner.username %>
+      </a>
+      <% } else { %>
+        <span class="text-slate-500">Unknown</span>
+        <% } %>
+  </div>
+
+  <div class="card p-6">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Created</p>
+    <p class="text-slate-900 font-medium">
+      <%= new Date(project.createdAt).toLocaleDateString('en-US', { month: 'long' , day: 'numeric' , year: 'numeric' })
+        %>
+    </p>
+  </div>
+
+  <div class="card p-6">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Last Updated</p>
+    <p class="text-slate-900 font-medium">
+      <%= new Date(project.updatedAt).toLocaleDateString('en-US', { month: 'long' , day: 'numeric' , year: 'numeric' })
+        %>
+    </p>
+  </div>
+
+</div>
+
+<!-- Description Full -->
+<% if (project.description) { %>
+  <div class="card p-8 mb-8">
+    <h2 class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">About this project</h2>
+    <p class="text-slate-700 leading-relaxed whitespace-pre-wrap">
+      <%= project.description %>
+    </p>
+  </div>
+<% } %>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  ATTACHMENTS SECTION                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card mb-8">
+  <div class="flex items-center justify-between px-8 pt-8 pb-5 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+      </svg>
+      <h2 class="text-base font-semibold text-slate-900">
+        Attachments <span class="ml-1 text-xs font-medium text-slate-400">(<%= project.attachments ? project.attachments.length : 0 %>)</span>
+      </h2>
+    </div>
+  </div>
+
+  <!-- Upload Form -->
+  <div class="px-8 py-5 border-b border-slate-100 bg-slate-50">
+    <form action="/projects/<%= project.id %>/attachments" method="POST" enctype="multipart/form-data"
+      class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Add file:</label>
+      <input type="file" name="attachment" id="attachment-input" accept=".png,.jpg,.jpeg,.pdf,.txt"
+        class="flex-1 text-sm text-slate-700 border border-slate-200 rounded-md px-3 py-2 bg-white
+               file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0
+               file:text-xs file:font-medium file:bg-slate-900 file:text-white
+               hover:file:bg-slate-700 cursor-pointer" required />
+      <button type="submit" id="upload-attachment-btn"
+        class="btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+        Upload
+      </button>
+      <p class="text-xs text-slate-400">PNG, JPG, PDF, TXT · max 10 MB</p>
+    </form>
+  </div>
+
+  <!-- Attachment List -->
+  <% if (project.attachments && project.attachments.length > 0) { %>
+    <ul class="divide-y divide-slate-100">
+      <% project.attachments.forEach(att => { %>
+        <li class="flex items-center justify-between gap-4 px-8 py-4 hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-4 min-w-0">
+            <!-- Format icon -->
+            <div class="w-9 h-9 flex-shrink-0 rounded-md flex items-center justify-center text-xs font-bold uppercase
+              <%= att.format === 'pdf' ? 'bg-red-50 text-red-600 border border-red-100' :
+                  (att.format === 'txt' ? 'bg-slate-100 text-slate-600 border border-slate-200' :
+                  'bg-blue-50 text-blue-600 border border-blue-100') %>">
+              <%= att.format %>
+            </div>
+            <div class="min-w-0">
+              <a href="/uploads/<%= att.storedName %>" target="_blank"
+                class="text-sm font-medium text-slate-900 hover:underline truncate block">
+                <%= att.filename %>
+              </a>
+              <p class="text-xs text-slate-400">
+                <%= att.format.toUpperCase() %> ·
+                <%= att.size ? (att.size / 1024).toFixed(1) + ' KB' : 'unknown size' %> ·
+                Uploaded by <strong><%= att.uploader ? att.uploader.username : 'unknown' %></strong> ·
+                <%= new Date(att.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+              </p>
+            </div>
+          </div>
+          <!-- Delete (uploader or admin) -->
+          <% if (isProjectAdmin || (currentUser && att.userId === currentUser.id)) { %>
+            <form action="/projects/<%= project.id %>/attachments/<%= att.id %>?_method=DELETE" method="POST"
+              onsubmit="return confirm('Delete this attachment?')">
+              <button type="submit"
+                class="p-1.5 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                title="Delete attachment">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </form>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <div class="px-8 py-10 text-center text-slate-400 text-sm">
+      No attachments yet. Upload the first file above.
+    </div>
+  <% } %>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  THREADS SECTION                                               -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="flex items-center justify-between px-8 pt-8 pb-5 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      <h2 class="text-base font-semibold text-slate-900">
+        Discussion Threads <span class="ml-1 text-xs font-medium text-slate-400">(<%= project.threads ? project.threads.length : 0 %>)</span>
+      </h2>
+    </div>
+    <!-- New thread button (admin only) -->
+    <% if (isProjectAdmin) { %>
+      <a href="/projects/<%= project.id %>/threads/new" id="new-thread-btn"
+        class="btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        New Thread
+      </a>
+    <% } %>
+  </div>
+
+  <!-- Thread List -->
+  <% if (project.threads && project.threads.length > 0) { %>
+    <ul class="divide-y divide-slate-100">
+      <% project.threads.forEach(thread => { %>
+        <li class="flex items-center justify-between gap-4 px-8 py-4 hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-9 h-9 flex-shrink-0 rounded-full bg-indigo-50 border border-indigo-100
+                        flex items-center justify-center text-indigo-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <a href="/projects/<%= project.id %>/threads/<%= thread.id %>"
+                class="text-sm font-semibold text-slate-900 hover:underline truncate block">
+                <%= thread.title %>
+              </a>
+              <p class="text-xs text-slate-400">
+                By <strong><%= thread.creator ? thread.creator.username : 'unknown' %></strong> ·
+                <%= thread.messages ? thread.messages.length : 0 %> message<%= (thread.messages && thread.messages.length === 1) ? '' : 's' %> ·
+                <%= new Date(thread.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+              </p>
+            </div>
+          </div>
+          <!-- Admin actions -->
+          <% if (isProjectAdmin) { %>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <a href="/projects/<%= project.id %>/threads/<%= thread.id %>/edit"
+                class="p-1.5 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                title="Edit thread">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </a>
+              <form action="/projects/<%= project.id %>/threads/<%= thread.id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Delete this thread and all its messages?')">
+                <button type="submit"
+                  class="p-1.5 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  title="Delete thread">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </form>
+            </div>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <div class="px-8 py-10 text-center text-slate-400 text-sm">
+      <% if (isProjectAdmin) { %>
+        No threads yet. <a href="/projects/<%= project.id %>/threads/new" class="text-slate-700 font-medium hover:underline">Start the first discussion →</a>
+      <% } else { %>
+        No discussion threads yet.
+      <% } %>
+    </div>
+  <% } %>
+</div>

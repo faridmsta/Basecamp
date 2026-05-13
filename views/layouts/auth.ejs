@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Project Manager</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: #fff; }
+
+    /* ── Outer shell ─────────────────────────────────────────── */
+    .auth-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT — Form panel ───────────────────────────────────── */
+    .auth-form-panel {
+      flex: 0 0 100%;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      position: relative;
+      overflow-y: auto;
+    }
+    @media (min-width: 900px) {
+      .auth-form-panel { flex: 0 0 42%; }
+    }
+
+    .auth-form-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 52px 32px;
+      max-width: 460px;
+      width: 100%;
+    }
+    @media (max-width: 640px) {
+      .auth-form-inner { padding: 32px 24px; }
+    }
+
+    /* Logo */
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 56px;
+    }
+    .auth-logo svg {
+      width: 22px;
+      height: 22px;
+      color: #111827;
+    }
+    .auth-logo-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+
+    /* Heading */
+    .auth-heading {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .auth-subheading {
+      font-size: 0.875rem;
+      color: #6B7280;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    /* OAuth buttons */
+    .oauth-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 16px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+    .oauth-btn:hover {
+      background: #F9FAFB;
+      border-color: #D1D5DB;
+    }
+
+    /* OR divider */
+    .auth-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #9CA3AF;
+      font-size: 0.8rem;
+      margin: 20px 0;
+    }
+    .auth-or::before, .auth-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E5E7EB;
+    }
+
+    /* Labels */
+    .auth-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    /* Inputs */
+    .auth-input {
+      width: 100%;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.875rem;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+    .auth-input::placeholder { color: #9CA3AF; }
+    .auth-input:focus {
+      border-color: #6366F1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+
+    /* Remember + forgot row */
+    .auth-remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    .auth-remember-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #6B7280;
+      cursor: pointer;
+    }
+    .auth-remember-row a {
+      color: #6B7280;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .auth-remember-row a:hover { color: #111827; text-decoration: underline; }
+
+    /* Primary CTA */
+    .auth-submit {
+      width: 100%;
+      background: #4F46E5;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.01em;
+    }
+    .auth-submit:hover { background: #4338CA; }
+    .auth-submit:active { transform: scale(0.99); }
+
+    /* Bottom link */
+    .auth-bottom-link {
+      font-size: 0.82rem;
+      color: #6B7280;
+      text-align: left;
+    }
+    .auth-bottom-link a {
+      color: #4F46E5;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .auth-bottom-link a:hover { text-decoration: underline; }
+
+    /* Error block */
+    .auth-errors {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+    .auth-errors li {
+      color: #DC2626;
+      font-size: 0.82rem;
+      list-style: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .auth-footer {
+      padding: 20px 52px;
+      font-size: 0.78rem;
+      color: #9CA3AF;
+    }
+    @media (max-width: 640px) { .auth-footer { padding: 20px 24px; } }
+
+    /* ── RIGHT — Image panel ─────────────────────────────────── */
+    .auth-image-panel {
+      display: none;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 900px) {
+      .auth-image-panel { display: block; }
+    }
+
+    .auth-image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Bottom caption on image */
+    .auth-image-caption {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-image-caption a {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .auth-image-caption a:hover { background: rgba(255,255,255,0.3); }
+
+    /* Spacer to push form content down from logo */
+    .auth-form-body { flex: 1; }
+  </style>
+</head>
+
+<body>
+  <div class="auth-shell">
+
+    <!-- ── LEFT: Form Panel ─────────────────────────────────── -->
+    <div class="auth-form-panel">
+      <div class="auth-form-inner">
+
+        <!-- Logo -->
+        <div class="auth-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <span class="auth-logo-text">ProjectManager</span>
+        </div>
+
+        <!-- Flash messages -->
+        <% if (typeof successMessages !== 'undefined' && successMessages && successMessages.length > 0) { %>
+          <div class="auth-errors" style="background:#F0FDF4;border-color:#BBF7D0;margin-bottom:16px;">
+            <% successMessages.forEach(msg => { %>
+              <li style="color:#166534;"><%= msg %></li>
+            <% }) %>
+          </div>
+        <% } %>
+        <% if (typeof errorMessages !== 'undefined' && errorMessages && errorMessages.length > 0) { %>
+          <div class="auth-errors">
+            <% errorMessages.forEach(msg => { %>
+              <li><%= msg %></li>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <!-- Page body (sign_in.ejs / users/new.ejs inject here) -->
+        <%- body %>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        &copy; <%= new Date().getFullYear() %> ProjectManager. All rights reserved.
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Hero Image ────────────────────────────────── -->
+    <div class="auth-image-panel">
+      <img src="/auth-hero.png" alt="Abstract gradient background" />
+      <!-- Social icons row at bottom (decorative) -->
+      <div class="auth-image-caption">
+        <!-- Twitter -->
+        <a href="#" title="Twitter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.213 5.567 5.951-5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        <!-- Instagram -->
+        <a href="#" title="Instagram">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" title="LinkedIn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+        <!-- YouTube -->
+        <a href="#" title="YouTube">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

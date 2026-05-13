@@ -1,0 +1,117 @@
+<!-- views/users/show.ejs — User Profile -->
+
+<div class="max-w-4xl mx-auto py-8">
+
+  <!-- Profile Header Card -->
+  <div
+    class="glass rounded-3xl p-8 sm:p-10 shadow-2xl mb-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 relative overflow-hidden">
+    <!-- Background Decor -->
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-500 rounded-full blur-3xl opacity-10"></div>
+
+    <!-- Avatar -->
+    <div class="w-32 h-32 rounded-full bg-gradient-to-br from-brand-400 to-indigo-600 p-1 shadow-xl shrink-0">
+      <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center border-4 border-slate-900">
+        <span class="text-5xl font-bold text-white">
+          <%= profileUser.username.charAt(0).toUpperCase() %>
+        </span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="flex-1 text-center sm:text-left z-10">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-2">
+        <h1 class="text-3xl font-bold text-black">
+          <%= profileUser.username %>
+        </h1>
+        <% if (profileUser.role==='admin' ) { %>
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Admin
+          </span>
+          <% } %>
+      </div>
+      <p class="text-slate-400 mb-6 flex items-center justify-center sm:justify-start gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <%= profileUser.email %>
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4">
+        <div class="bg-slate-200/50 rounded-xl px-4 py-2 border border-slate-100/50">
+          <p class="text-xs text-slate-500 uppercase tracking-wider mb-0.5">Joined</p>
+          <p class="text-sm font-medium text-black">
+            <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', { month: 'long' , year: 'numeric' }) %>
+          </p>
+        </div>
+        <div class="bg-slate-200/50 rounded-xl px-4 py-2 border border-slate-100/50">
+          <p class="text-xs text-slate-500 uppercase tracking-wider mb-0.5">Projects</p>
+          <p class="text-sm font-medium text-black">
+            <%= profileUser.projects ? profileUser.projects.length : 0 %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User's Projects -->
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-bold text-black">Projects by <%= profileUser.username %>
+    </h2>
+  </div>
+
+  <% if (!profileUser.projects || profileUser.projects.length===0) { %>
+    <div class="card rounded-2xl p-10 text-center border border-slate-800 border-dashed">
+      <p class="text-slate-400">This user hasn't created any projects yet.</p>
+    </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% profileUser.projects.forEach(project=> { %>
+          <a href="/projects/<%= project.id %>"
+            class="card rounded-xl p-5 hover:border-brand-500/30 hover:bg-slate-200/80 transition-all group">
+            <div class="flex items-start justify-between mb-2">
+              <h3 class="text-lg font-semibold text-black group-hover:text-brand-300 transition-colors line-clamp-1">
+                <%= project.name %>
+              </h3>
+              <span class="status-<%= project.status %> text-[10px] font-bold px-2 py-0.5 rounded capitalize shrink-0">
+                <%= project.status %>
+              </span>
+            </div>
+            <p class="text-sm text-slate-400 line-clamp-2 mb-4">
+              <%= project.description || 'No description' %>
+            </p>
+            <p class="text-xs text-slate-500">Updated <%= new Date(project.updatedAt).toLocaleDateString() %>
+            </p>
+          </a>
+          <% }) %>
+      </div>
+      <% } %>
+
+        <!-- Account Management (Self or Admin) -->
+        <% if (currentUser && (currentUser.id===profileUser.id || currentUser.role==='admin' )) { %>
+          <div class="mt-12 pt-8 border-t border-slate-800">
+            <h3 class="text-lg font-bold text-black mb-4">Account Settings</h3>
+            <div
+              class="glass rounded-xl p-6 border border-red-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p class="text-black font-medium">Delete Account</p>
+                <p class="text-slate-400 text-sm">Once you delete an account, there is no going back. Please be certain.
+                </p>
+              </div>
+              <form action="/users/<%= profileUser.id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('Are you absolutely sure you want to delete this account?');">
+                <button type="submit"
+                  class="btn-danger bg-red-200 px-5 py-2.5 rounded-xl text-sm font-semibold text-black whitespace-nowrap">
+                  Delete Account
+                </button>
+              </form>
+            </div>
+          </div>
+          <% } %>
+
+</div>
